@@ -184,8 +184,8 @@ export const TECH_STACK: TechItem[] = [
     speed: 'Formatted Excel'
   },
   {
-    id: 'tech-bootstrap',
-    name: 'Bootstrap 5',
+    id: 'tech-react',
+    name: 'React 19 & Vite',
     category: 'Frontend UI',
     role: 'Clean UI & responsive grid layout.',
     icon: 'Layout',
@@ -202,6 +202,11 @@ export const TECH_STACK: TechItem[] = [
     glowColor: '#092E20',
     description: 'Renders dynamic student lists, eligibility matrices, and admin panels securely.',
     speed: 'Secure Server-Side'
+    role: 'Ultra-fast SPA user interface with sub-millisecond state re-renders and smooth motion.',
+    icon: 'Atom',
+    glowColor: '#61DAFB',
+    description: 'Reactive command center with glassmorphic visuals and instant user feedback.',
+    speed: 'Sub-ms Render'
   },
   {
     id: 'tech-gemini',
@@ -228,12 +233,12 @@ export const TECH_STACK: TechItem[] = [
 export const ARCH_NODES: ArchNode[] = [
   {
     id: 'node-client',
-    title: 'Django Server & Bootstrap 5',
-    subtitle: 'Student / Company / Admin Roles',
+    title: 'React 19 Dashboard',
+    subtitle: 'Student / TPO / Recruiter UI',
     type: 'client',
     status: 'operational',
-    latency: '8ms',
-    throughput: '3.2k req/s'
+    latency: '12ms',
+    throughput: '2.4k req/s'
   },
   {
     id: 'node-api',

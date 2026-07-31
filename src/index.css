@@ -1,67 +1,84 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Inter:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --bg-dark: #060f1e;
-  --bg-card: #0f1d30;
-  --primary: #10b981;
-  --primary-light: #34d399;
-  --accent: #06b6d4;
-  --success: #10b981;
-  --font-heading: 'Outfit', sans-serif;
-  --font-body: 'Inter', sans-serif;
+  --bg-main: #151515;
+  --bg-section: #1B1B1B;
+  --bg-surface: #1F1F1F;
+  --bg-card: #282828;
+  --bg-elevated: #323232;
+
+  --border-color: #3A3A3A;
+  --divider-color: #404040;
+
+  --text-primary: #FAFAFA;
+  --text-secondary: #D4D4D4;
+  --text-muted: #9E9E9E;
+
+  --accent-primary: #6A8DFF;
+  --accent-hover: #7D9EFF;
+
+  --status-success: #4CAF50;
+  --status-warning: #D9A441;
+  --status-danger: #C85C5C;
+
+  --shadow-main: 0 12px 30px rgba(0, 0, 0, 0.35);
+  --font-heading: 'Inter', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
 }
 
 body {
-  background-color: var(--bg-dark);
-  color: #F8FAFC;
+  background-color: var(--bg-main);
+  color: var(--text-primary);
   font-family: var(--font-body);
   overflow-x: hidden;
   margin: 0;
   padding: 0;
   cursor: default;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 h1, h2, h3, .font-heading {
   font-family: var(--font-heading);
+  letter-spacing: -0.025em;
 }
 
-/* Custom Glassmorphism with Mint/Emerald Tint */
+/* Premium Editorial Glass Panel */
 .glass-panel {
-  background: rgba(15, 29, 48, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(16, 185, 129, 0.12);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
 }
 
 .glass-panel-hover {
-  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-panel-hover:hover {
-  background: rgba(15, 29, 48, 0.9);
-  border-color: rgba(16, 185, 129, 0.3);
-  box-shadow: 0 12px 40px 0 rgba(16, 185, 129, 0.08);
-  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
 }
 
 /* Scrollbar Customization */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #060f1e;
+  background: #151515;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(16, 185, 129, 0.25);
-  border-radius: 4px;
+  background: #3A3A3A;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(16, 185, 129, 0.5);
+  background: #404040;
 }
 
 /* Hide Scrollbar Utility */
@@ -83,62 +100,16 @@ h1, h2, h3, .font-heading {
   transform-style: preserve-3d;
 }
 
-/* Floating Animation Keyframes */
-@keyframes floatSlow {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
-}
-
-@keyframes floatFast {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-6px); }
-}
-
-.animate-float-slow {
-  animation: floatSlow 8s ease-in-out infinite;
-}
-
-.animate-float-fast {
-  animation: floatFast 4s ease-in-out infinite;
+/* Animated Minimal Grid Background */
+.grid-bg-overlay {
+  background-size: 80px 80px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
 }
 
 /* Text Selection */
 ::selection {
-  background: rgba(16, 185, 129, 0.3);
-  color: #34d399;
-}
-
-/* Fade In Animation */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.animate-fadeIn {
-  animation: fadeIn 0.5s ease-out forwards;
-}
-
-/* Typewriter Cursor Blink */
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
-}
-
-.animate-cursor-blink {
-  animation: blink 1s step-end infinite;
-}
-
-/* Circular Progress Ring Animation */
-@keyframes ringDraw {
-  from { stroke-dashoffset: 283; }
-}
-
-/* Staggered Slide-Up Entrance */
-@keyframes slideUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.animate-slide-up {
-  animation: slideUp 0.6s ease-out forwards;
+  background: rgba(106, 141, 255, 0.25);
+  color: #FAFAFA;
 }

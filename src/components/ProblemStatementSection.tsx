@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { AlertTriangle, CheckCircle2, FileSpreadsheet, Zap, Clock, XCircle, Sparkles } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, FileSpreadsheet, Zap, Clock, ShieldAlert, Sparkles, XCircle } from 'lucide-react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { soundEngine } from '../utils/audio';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -29,14 +30,14 @@ export const ProblemStatementSection: React.FC = () => {
       )
         .fromTo(
           legacyCardRef.current,
-          { x: -80, opacity: 0 },
-          { x: 0, opacity: 1, duration: 1, ease: 'power4.out' },
+          { x: -80, opacity: 0, rotateY: 15 },
+          { x: 0, opacity: 1, rotateY: 0, duration: 1, ease: 'power4.out' },
           '-=0.4'
         )
         .fromTo(
           smartCardRef.current,
-          { x: 80, opacity: 0 },
-          { x: 0, opacity: 1, duration: 1, ease: 'power4.out' },
+          { x: 80, opacity: 0, rotateY: -15 },
+          { x: 0, opacity: 1, rotateY: 0, duration: 1, ease: 'power4.out' },
           '-=0.8'
         );
     }, sectionRef);
@@ -53,92 +54,103 @@ export const ProblemStatementSection: React.FC = () => {
 
   const smartSolutions = [
     { title: 'Zero-Error SQL Matrix', desc: 'Automated filter evaluating 12,000+ candidate profiles in under 20 milliseconds.' },
-    { title: 'Instant Broadcast Engine', desc: 'Celery worker dispatches real-time push, portal alerts, and email reminders.' },
+    { title: 'Instant Broadcast Engine', desc: 'Celery worker dispatches real-time push, portal alerts, and WhatsApp reminders.' },
     { title: '1-Click Executive Reports', desc: 'Pandas & OpenPyXL generate audit-ready NIRF / NAAC reports automatically.' },
     { title: 'Automated Offer Lock', desc: 'Strict policy enforcement locks candidates once a dream offer is accepted.' },
   ];
 
   return (
-    <section id="problem" ref={sectionRef} className="relative py-28 px-4 sm:px-8 overflow-hidden">
-      <div className="absolute top-0 right-0 w-96 h-96 bg-radial from-emerald-500/8 to-transparent rounded-full blur-3xl pointer-events-none" />
+    <section id="problem" ref={sectionRef} className="relative py-28 px-4 sm:px-8 bg-[#1B1B1B] overflow-hidden">
+      {/* Background Subtle Gradient Accent */}
+      <div className="absolute top-0 right-0 w-96 h-96 bg-radial from-[#6A8DFF]/5 to-transparent rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-16 problem-heading">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-800 border border-red-500/30 text-xs font-mono text-red-400 mb-4">
-            <AlertTriangle className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-[#1F1F1F] border border-[#3A3A3A] text-xs font-mono text-[#D4D4D4] mb-4">
+            <AlertTriangle className="w-3.5 h-3.5 text-[#9E9E9E]" />
             <span>THE PLACEMENT BOTTLENECK</span>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-heading font-extrabold text-white tracking-tight mb-4">
-            Why Legacy College Systems <span className="text-red-400">Fail</span> Modern Placements
+          <h2 className="text-3xl sm:text-5xl font-heading font-bold text-[#FAFAFA] tracking-tight mb-4">
+            Why Legacy Systems Fail Modern Campus Recruitment
           </h2>
-          <p className="text-slate-300 text-base sm:text-lg">
+          <p className="text-[#D4D4D4] text-base sm:text-lg">
             Traditional placement offices rely on manual spreadsheets and disjointed communication.
-            Here is how Smart Placement Portal transforms chaotic operations into automated precision.
+            Smart Placement Portal transforms chaotic operations into automated precision.
           </p>
 
-          {/* Mobile Tab Switcher */}
-          <div className="flex md:hidden items-center justify-center gap-2 mt-8 p-1.5 rounded-2xl bg-slate-800 border border-white/10">
+          {/* Mobile View Switcher */}
+          <div className="flex md:hidden items-center justify-center gap-2 mt-8 p-1 rounded-lg bg-[#1F1F1F] border border-[#3A3A3A]">
             <button
-              onClick={() => setActiveTab('legacy')}
-              className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
-                activeTab === 'legacy' ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'text-slate-400'
+              onClick={() => {
+                soundEngine.playClick();
+                setActiveTab('legacy');
+              }}
+              className={`flex-1 py-2 rounded-md text-xs font-medium transition-all ${
+                activeTab === 'legacy' ? 'bg-[#323232] text-[#FAFAFA]' : 'text-[#9E9E9E]'
               }`}
             >
-              Legacy Way
+              Legacy Process
             </button>
             <button
-              onClick={() => setActiveTab('smart')}
-              className={`flex-1 py-2 rounded-xl text-xs font-bold transition-all ${
-                activeTab === 'smart' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'text-slate-400'
+              onClick={() => {
+                soundEngine.playClick();
+                setActiveTab('smart');
+              }}
+              className={`flex-1 py-2 rounded-md text-xs font-medium transition-all ${
+                activeTab === 'smart' ? 'bg-[#6A8DFF] text-white' : 'text-[#9E9E9E]'
               }`}
             >
-              Smart Portal
+              Smart Engine
             </button>
           </div>
         </div>
 
         {/* Comparison Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+        <div className="perspective-container grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
           {/* Legacy Card */}
           <div
             ref={legacyCardRef}
-            className={`glass-panel rounded-3xl p-6 sm:p-8 border-red-500/20 flex flex-col justify-between transition-all duration-300 ${
+            className={`glass-panel rounded-2xl p-6 sm:p-8 border-[#3A3A3A] bg-[#282828] flex flex-col justify-between transition-all duration-300 ${
               activeTab === 'legacy' ? 'block' : 'hidden md:flex'
             }`}
           >
             <div>
-              <div className="flex items-center justify-between mb-6 pb-4 border-b border-red-500/20">
+              <div className="flex items-center justify-between mb-6 pb-4 border-b border-[#404040]">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-400">
-                    <FileSpreadsheet className="w-6 h-6" />
+                  <div className="w-10 h-10 rounded-lg bg-[#1F1F1F] border border-[#3A3A3A] flex items-center justify-center text-[#9E9E9E]">
+                    <FileSpreadsheet className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-heading font-bold text-white">Legacy Manual Process</h3>
-                    <p className="text-xs text-red-400 font-mono">Status: Error Prone & Slow</p>
+                    <h3 className="text-lg font-heading font-semibold text-[#FAFAFA]">Legacy Manual Process</h3>
+                    <p className="text-xs text-[#9E9E9E] font-mono">Status: Manual & Error-Prone</p>
                   </div>
                 </div>
-                <span className="px-3 py-1 rounded-full bg-red-500/10 text-red-400 text-xs font-mono font-bold">
-                  HIGH RISK
+                <span className="px-2.5 py-1 rounded bg-[#C85C5C]/10 text-[#C85C5C] border border-[#C85C5C]/20 text-xs font-mono">
+                  Legacy
                 </span>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {legacyFails.map((item, idx) => (
-                  <div key={idx} className="p-4 rounded-2xl bg-red-950/20 border border-red-500/10 hover:border-red-500/30 transition-all flex items-start gap-3">
-                    <XCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
+                  <div
+                    key={idx}
+                    onMouseEnter={() => soundEngine.playHover()}
+                    className="p-3.5 rounded-xl bg-[#1F1F1F] border border-[#3A3A3A] flex items-start gap-3"
+                  >
+                    <XCircle className="w-4 h-4 text-[#C85C5C] shrink-0 mt-0.5" />
                     <div>
-                      <h4 className="text-sm font-bold text-white">{item.title}</h4>
-                      <p className="text-xs text-slate-400 mt-1 leading-relaxed">{item.desc}</p>
+                      <h4 className="text-xs font-semibold text-[#FAFAFA]">{item.title}</h4>
+                      <p className="text-xs text-[#9E9E9E] mt-1 leading-relaxed">{item.desc}</p>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="mt-8 pt-4 border-t border-red-500/20 flex items-center justify-between text-xs font-mono text-red-400">
+            <div className="mt-8 pt-4 border-t border-[#404040] flex items-center justify-between text-xs font-mono text-[#9E9E9E]">
               <span className="flex items-center gap-1.5">
-                <Clock className="w-4 h-4" /> Avg Processing: 14 Days
+                <Clock className="w-3.5 h-3.5" /> Avg Processing: 14 Days
               </span>
               <span>Error Rate: ~18%</span>
             </div>
@@ -147,44 +159,50 @@ export const ProblemStatementSection: React.FC = () => {
           {/* Smart Portal Card */}
           <div
             ref={smartCardRef}
-            className={`glass-panel rounded-3xl p-6 sm:p-8 border-emerald-500/30 flex flex-col justify-between transition-all duration-300 ${
+            className={`glass-panel rounded-2xl p-6 sm:p-8 border-[#3A3A3A] bg-[#282828] flex flex-col justify-between transition-all duration-300 shadow-lg ${
               activeTab === 'smart' ? 'block' : 'hidden md:flex'
             }`}
           >
             <div>
-              <div className="flex items-center justify-between mb-6 pb-4 border-b border-emerald-500/20">
+              <div className="flex items-center justify-between mb-6 pb-4 border-b border-[#404040]">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400">
-                    <Zap className="w-6 h-6" />
+                  <div className="w-10 h-10 rounded-lg bg-[#6A8DFF]/10 border border-[#6A8DFF]/30 flex items-center justify-center text-[#6A8DFF]">
+                    <Zap className="w-5 h-5" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-heading font-bold text-white">Smart Placement Portal</h3>
-                    <p className="text-xs text-emerald-400 font-mono">Status: 100% Automated Engine</p>
+                    <h3 className="text-lg font-heading font-semibold text-[#FAFAFA]">Smart Placement Engine</h3>
+                    <p className="text-xs text-[#6A8DFF] font-mono">Status: Automated Precision</p>
                   </div>
                 </div>
-                <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-mono font-bold flex items-center gap-1">
-                  <Sparkles className="w-3.5 h-3.5" /> AUTOMATED
+                <span className="px-2.5 py-1 rounded bg-[#6A8DFF]/10 text-[#6A8DFF] border border-[#6A8DFF]/20 text-xs font-mono flex items-center gap-1">
+                  <Sparkles className="w-3 h-3" /> ZERO LATENCY
                 </span>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-3">
                 {smartSolutions.map((item, idx) => (
-                  <div key={idx} className="p-4 rounded-2xl bg-emerald-500/5 border border-emerald-500/10 hover:border-emerald-500/30 transition-all flex items-start gap-3">
-                    <CheckCircle2 className="w-5 h-5 text-emerald-400 shrink-0 mt-0.5" />
+                  <div
+                    key={idx}
+                    onMouseEnter={() => soundEngine.playHover()}
+                    className="p-3.5 rounded-xl bg-[#1F1F1F] border border-[#3A3A3A] hover:border-[#6A8DFF]/40 transition-all flex items-start gap-3"
+                  >
+                    <CheckCircle2 className="w-4 h-4 text-[#4CAF50] shrink-0 mt-0.5" />
                     <div>
-                      <h4 className="text-sm font-bold text-white">{item.title}</h4>
-                      <p className="text-xs text-slate-300 mt-1 leading-relaxed">{item.desc}</p>
+                      <h4 className="text-xs font-semibold text-[#FAFAFA] flex items-center gap-2">
+                        {item.title}
+                      </h4>
+                      <p className="text-xs text-[#D4D4D4] mt-1 leading-relaxed">{item.desc}</p>
                     </div>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="mt-8 pt-4 border-t border-emerald-500/20 flex items-center justify-between text-xs font-mono text-emerald-400">
+            <div className="mt-8 pt-4 border-t border-[#404040] flex items-center justify-between text-xs font-mono text-[#6A8DFF]">
               <span className="flex items-center gap-1.5">
-                <Zap className="w-4 h-4" /> Avg Processing: 0.02 Sec
+                <Zap className="w-3.5 h-3.5 text-[#6A8DFF]" /> Avg Processing: 0.02 Sec
               </span>
-              <span>Accuracy: 100%</span>
+              <span className="text-[#4CAF50]">Accuracy: 100%</span>
             </div>
           </div>
         </div>

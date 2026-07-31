@@ -10,7 +10,7 @@ export const ThreeCanvas: React.FC = () => {
 
     // Scene, Camera, Renderer
     const scene = new THREE.Scene();
-    scene.fog = new THREE.FogExp2(0x071320, 0.015);
+    scene.fog = new THREE.FogExp2(0x151515, 0.015);
 
     const camera = new THREE.PerspectiveCamera(
       60,
@@ -33,22 +33,22 @@ export const ThreeCanvas: React.FC = () => {
     const mainGroup = new THREE.Group();
     scene.add(mainGroup);
 
-    // 1. Particle Starfield / Quantum Dust
-    const particleCount = 700;
+    // 1. Particle Starfield / Quantum Dust (Muted editorial palette)
+    const particleCount = 500;
     const geometry = new THREE.BufferGeometry();
     const positions = new Float32Array(particleCount * 3);
     const colors = new Float32Array(particleCount * 3);
 
-    const colorTeal = new THREE.Color(0x14f1d9);
-    const colorMint = new THREE.Color(0x00ffc6);
-    const colorBlue = new THREE.Color(0x3b82f6);
+    const colorSlate = new THREE.Color(0x9e9e9e);
+    const colorWhite = new THREE.Color(0xfafafa);
+    const colorBlue = new THREE.Color(0x6a8dff);
 
     for (let i = 0; i < particleCount; i++) {
       positions[i * 3] = (Math.random() - 0.5) * 80;
       positions[i * 3 + 1] = (Math.random() - 0.5) * 60;
       positions[i * 3 + 2] = (Math.random() - 0.5) * 60;
 
-      const randColor = Math.random() > 0.5 ? colorTeal : Math.random() > 0.5 ? colorMint : colorBlue;
+      const randColor = Math.random() > 0.85 ? colorBlue : Math.random() > 0.5 ? colorSlate : colorWhite;
       colors[i * 3] = randColor.r;
       colors[i * 3 + 1] = randColor.g;
       colors[i * 3 + 2] = randColor.b;
@@ -58,27 +58,27 @@ export const ThreeCanvas: React.FC = () => {
     geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
     const particleMaterial = new THREE.PointsMaterial({
-      size: 0.35,
+      size: 0.22,
       vertexColors: true,
       transparent: true,
-      opacity: 0.75,
-      blending: THREE.AdditiveBlending,
+      opacity: 0.35,
+      blending: THREE.NormalBlending,
     });
 
     const particles = new THREE.Points(geometry, particleMaterial);
     mainGroup.add(particles);
 
-    // 2. 3D Floating Futuristic Geometric Polyhedrons
-    const geoCount = 5;
+    // 2. 3D Floating Minimal Geometric Polyhedrons
+    const geoCount = 4;
     const meshList: THREE.Mesh[] = [];
 
     for (let i = 0; i < geoCount; i++) {
       const geoType = i % 2 === 0 ? new THREE.IcosahedronGeometry(1.8, 1) : new THREE.OctahedronGeometry(2.2, 0);
       const wireMat = new THREE.MeshBasicMaterial({
-        color: i % 2 === 0 ? 0x14f1d9 : 0x00ffc6,
+        color: i % 2 === 0 ? 0x3a3a3a : 0x6a8dff,
         wireframe: true,
         transparent: true,
-        opacity: 0.25,
+        opacity: i % 2 === 0 ? 0.15 : 0.08,
       });
 
       const mesh = new THREE.Mesh(geoType, wireMat);
@@ -93,10 +93,10 @@ export const ThreeCanvas: React.FC = () => {
     }
 
     // 3. Grid Floor Perspective Plane
-    const gridHelper = new THREE.GridHelper(120, 40, 0x14f1d9, 0x0f172a);
+    const gridHelper = new THREE.GridHelper(120, 40, 0x3a3a3a, 0x282828);
     gridHelper.position.y = -12;
     (gridHelper.material as THREE.Material).transparent = true;
-    (gridHelper.material as THREE.Material).opacity = 0.25;
+    (gridHelper.material as THREE.Material).opacity = 0.08;
     mainGroup.add(gridHelper);
 
     // Mouse Parallax Interaction

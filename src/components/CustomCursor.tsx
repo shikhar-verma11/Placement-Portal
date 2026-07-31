@@ -58,35 +58,34 @@ export const CustomCursor: React.FC = () => {
     <div className="pointer-events-none fixed inset-0 z-50 overflow-hidden">
       {/* Background Spotlight / Light Glow Following Cursor */}
       <div
-        className="absolute rounded-full blur-3xl opacity-20 transition-all duration-300 ease-out"
+        className="absolute rounded-full blur-3xl opacity-10 transition-all duration-300 ease-out"
         style={{
           left: `${pos.x}px`,
           top: `${pos.y}px`,
-          width: isHovered ? '350px' : '220px',
-          height: isHovered ? '350px' : '220px',
+          width: isHovered ? '240px' : '160px',
+          height: isHovered ? '240px' : '160px',
           transform: 'translate(-50%, -50%)',
           background: isHovered
-            ? 'radial-gradient(circle, rgba(0,255,198,0.3) 0%, rgba(20,241,217,0.1) 50%, transparent 70%)'
-            : 'radial-gradient(circle, rgba(20,241,217,0.2) 0%, rgba(15,23,42,0.1) 60%, transparent 70%)',
+            ? 'radial-gradient(circle, rgba(106,141,255,0.2) 0%, rgba(255,255,255,0.03) 50%, transparent 70%)'
+            : 'radial-gradient(circle, rgba(106,141,255,0.1) 0%, transparent 70%)',
         }}
       />
 
       {/* Outer Ring */}
       <div
-        className={`absolute rounded-full border border-[#14F1D9]/60 transition-transform duration-100 ease-out flex items-center justify-center ${
-          isClicked ? 'scale-75' : isHovered ? 'scale-150 bg-[#14F1D9]/10 border-[#00FFC6]' : 'scale-100'
+        className={`absolute rounded-full border border-white/20 transition-transform duration-150 ease-out flex items-center justify-center ${
+          isClicked ? 'scale-75' : isHovered ? 'scale-125 bg-[#6A8DFF]/10 border-[#6A8DFF]/40' : 'scale-100'
         }`}
         style={{
           left: `${pos.x}px`,
           top: `${pos.y}px`,
-          width: '36px',
-          height: '36px',
-          transform: `translate(-50%, -50%) ${isHovered ? 'scale(1.5)' : 'scale(1)'}`,
-          boxShadow: isHovered ? '0 0 15px rgba(20,241,217,0.5)' : '0 0 8px rgba(20,241,217,0.2)',
+          width: '32px',
+          height: '32px',
+          transform: `translate(-50%, -50%) ${isHovered ? 'scale(1.25)' : 'scale(1)'}`,
         }}
       >
         {hoverText && (
-          <span className="text-[9px] font-bold tracking-wider uppercase text-[#00FFC6] whitespace-nowrap px-1">
+          <span className="text-[9px] font-medium tracking-wider text-[#6A8DFF] whitespace-nowrap px-1">
             {hoverText}
           </span>
         )}
@@ -94,14 +93,13 @@ export const CustomCursor: React.FC = () => {
 
       {/* Core Dot */}
       <div
-        className="absolute rounded-full bg-[#00FFC6] transition-transform duration-75 ease-out"
+        className="absolute rounded-full bg-[#6A8DFF] transition-transform duration-75 ease-out"
         style={{
           left: `${pos.x}px`,
           top: `${pos.y}px`,
-          width: '6px',
-          height: '6px',
+          width: '4px',
+          height: '4px',
           transform: 'translate(-50%, -50%)',
-          boxShadow: '0 0 10px #00FFC6, 0 0 20px #14F1D9',
         }}
       />
     </div>

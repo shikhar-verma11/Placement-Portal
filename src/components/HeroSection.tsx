@@ -1,37 +1,13 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { ArrowDownRight, Sparkles, Play, ShieldCheck, Zap, TrendingUp, Users, Award } from 'lucide-react';
+import React, { useEffect, useRef } from 'react';
+import { ArrowDownRight, Play, ShieldCheck } from 'lucide-react';
+import confetti from 'canvas-confetti';
 import gsap from 'gsap';
+import { soundEngine } from '../utils/audio';
+import { HeroGlassOrb } from './HeroGlassOrb';
 
 interface HeroProps {
   onOpenPortalModal: () => void;
 }
-
-// Animated counter hook
-const useCountUp = (end: number, duration: number = 2000, decimals: number = 0) => {
-  const [count, setCount] = useState(0);
-  const [hasStarted, setHasStarted] = useState(false);
-
-  useEffect(() => {
-    if (!hasStarted) return;
-    let startTime: number;
-    let rafId: number;
-
-    const animate = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
-      const progress = Math.min((timestamp - startTime) / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setCount(parseFloat((eased * end).toFixed(decimals)));
-      if (progress < 1) {
-        rafId = requestAnimationFrame(animate);
-      }
-    };
-
-    rafId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(rafId);
-  }, [hasStarted, end, duration, decimals]);
-
-  return { count, start: () => setHasStarted(true) };
-};
 
 export const HeroSection: React.FC<HeroProps> = ({ onOpenPortalModal }) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -39,188 +15,164 @@ export const HeroSection: React.FC<HeroProps> = ({ onOpenPortalModal }) => {
   const subtitleRef = useRef<HTMLParagraphElement>(null);
   const ctaRef = useRef<HTMLDivElement>(null);
 
-  const counter1 = useCountUp(0.02, 1500, 2);
-  const counter2 = useCountUp(12000, 2000, 0);
-
   useEffect(() => {
     const ctx = gsap.context(() => {
+      // Hero Entrance Timeline
       const tl = gsap.timeline({ defaults: { ease: 'power4.out', duration: 1.2 } });
 
       tl.fromTo(
         '.hero-badge',
-        { y: -30, opacity: 0, scale: 0.8 },
-        { y: 0, opacity: 1, scale: 1, duration: 0.8 }
+        { y: -20, opacity: 0 },
+        { y: 0, opacity: 1, duration: 0.8 }
       )
         .fromTo(
           '.hero-title-word',
-          { y: 60, opacity: 0, filter: 'blur(10px)' },
-          { y: 0, opacity: 1, filter: 'blur(0px)', stagger: 0.08, duration: 1 },
+          { y: 80, opacity: 0, filter: 'blur(8px)' },
+          { y: 0, opacity: 1, filter: 'blur(0px)', stagger: 0.08, duration: 1.1 },
           '-=0.4'
         )
         .fromTo(
+          '.hero-3d-orb-layer',
+          { scale: 0.8, opacity: 0 },
+          { scale: 1, opacity: 1, duration: 1.2, ease: 'power3.out' },
+          '-=0.9'
+        )
+        .fromTo(
           subtitleRef.current,
-          { y: 30, opacity: 0 },
+          { y: 25, opacity: 0 },
+          { y: 0, opacity: 1, duration: 0.8 },
+          '-=0.7'
+        )
+        .fromTo(
+          ctaRef.current,
+          { y: 25, opacity: 0 },
           { y: 0, opacity: 1, duration: 0.8 },
           '-=0.6'
         )
         .fromTo(
-          ctaRef.current,
-          { y: 30, opacity: 0, scale: 0.9 },
-          { y: 0, opacity: 1, scale: 1, duration: 0.8 },
-          '-=0.6'
-        )
-        .fromTo(
-          '.hero-float-card',
-          { y: 40, opacity: 0, scale: 0.8 },
-          {
-            y: 0, opacity: 1, scale: 1, stagger: 0.15, duration: 1,
-            onComplete: () => { counter1.start(); counter2.start(); }
-          },
-          '-=0.6'
+          '.hero-geo-element',
+          { opacity: 0, scale: 0.8 },
+          { opacity: 1, scale: 1, stagger: 0.2, duration: 1.2 },
+          '-=0.8'
         );
     }, containerRef);
 
     return () => ctx.revert();
   }, []);
 
-  const scrollToContent = () => {
+  const triggerConfetti = () => {
+    soundEngine.playChime(650, 0.3);
+    confetti({
+      particleCount: 80,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ['#6A8DFF', '#7D9EFF', '#FAFAFA', '#D4D4D4'],
+    });
     const el = document.getElementById('problem');
     if (el) el.scrollIntoView({ behavior: 'smooth' });
   };
-
-  const titleWords = ['SMART', 'COLLEGE', 'PLACEMENT', 'MANAGEMENT', 'PORTAL'];
 
   return (
     <section
       id="hero"
       ref={containerRef}
-      className="relative min-h-screen flex items-center justify-center pt-24 pb-12 px-4 sm:px-8 overflow-hidden"
+      className="relative min-h-screen flex flex-col justify-between pt-28 sm:pt-32 pb-16 px-6 sm:px-12 bg-[#151515] overflow-hidden"
     >
-      {/* Soft Gradient Backdrop */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] sm:w-[900px] h-[600px] sm:h-[900px] bg-radial from-emerald-500/10 via-teal-500/5 to-transparent rounded-full blur-3xl pointer-events-none" />
+      {/* Layer 0: Background Soft Ambient Spotlights & Abstract Geo Elements */}
+      <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+        <div className="absolute top-1/3 right-1/4 -translate-y-1/2 w-[550px] sm:w-[800px] h-[400px] sm:h-[600px] bg-radial from-[#6A8DFF]/12 via-transparent to-transparent blur-3xl pointer-events-none" />
 
-      {/* Floating Stats Cards */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden hidden md:block">
-        <div className="hero-float-card absolute top-[18%] right-[8%] glass-panel rounded-2xl p-4 border-emerald-500/20 animate-float-slow max-w-xs">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-400">
-              <TrendingUp className="w-5 h-5" />
-            </div>
-            <div>
-              <p className="text-[11px] text-slate-400 font-mono uppercase tracking-wider">Placement Rate</p>
-              <p className="text-xl font-heading font-extrabold text-white flex items-center gap-1">
-                98.4%
-                <span className="text-[10px] text-green-400 font-mono">+14.2% YoY</span>
-              </p>
-            </div>
-          </div>
+        {/* Floating Wireframe Polygon */}
+        <div className="hero-geo-element absolute top-[18%] right-[6%] w-32 h-32 border border-[#3A3A3A] rotate-45 rounded-2xl backdrop-blur-sm bg-white/[0.01] animate-float-slow hidden md:block" />
+
+        {/* Floating Concentric Circle */}
+        <div className="hero-geo-element absolute bottom-[22%] left-[5%] w-40 h-40 border border-[#3A3A3A] rounded-full backdrop-blur-sm bg-white/[0.01] animate-float-fast hidden md:flex items-center justify-center">
+          <div className="w-20 h-20 border border-[#6A8DFF]/20 rounded-full" />
         </div>
 
-        <div className="hero-float-card absolute bottom-[20%] left-[6%] glass-panel rounded-2xl p-4 border-teal-500/20 animate-float-fast max-w-xs">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-teal-500/20 flex items-center justify-center text-teal-400">
-              <Award className="w-5 h-5" />
-            </div>
-            <div>
-              <p className="text-[11px] text-slate-400 font-mono uppercase tracking-wider">Top Package</p>
-              <p className="text-xl font-heading font-extrabold text-teal-400">₹52.8 LPA</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="hero-float-card absolute top-[25%] left-[10%] glass-panel rounded-full px-4 py-2 border-white/10 text-xs font-mono text-slate-300 flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-          <span>System Active</span>
-        </div>
-
-        <div className="hero-float-card absolute bottom-[25%] right-[10%] glass-panel rounded-full px-4 py-2 border-white/10 text-xs font-mono text-slate-300 flex items-center gap-2">
-          <Users className="w-3.5 h-3.5 text-emerald-400" />
-          <span>450+ Recruiters</span>
+        {/* Minimal Editorial Monospaced Accent Tag */}
+        <div className="hero-geo-element absolute top-[28%] left-[5%] font-mono text-[11px] text-[#9E9E9E] tracking-widest uppercase border-l border-[#3A3A3A] pl-3 py-1 hidden md:block">
+          Issue N° 01 &mdash; Enterprise Architecture
         </div>
       </div>
 
-      {/* Main Center Content */}
-      <div className="relative z-10 max-w-5xl mx-auto text-center flex flex-col items-center">
-        {/* Eyebrow Badge */}
-        <div className="hero-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-800/80 border border-emerald-500/30 text-xs font-mono text-emerald-400 mb-8 backdrop-blur-md">
-          <Zap className="w-3.5 h-3.5 text-emerald-400" />
-          <span>NEXT-GEN CAMPUS RECRUITMENT ECOSYSTEM</span>
+      {/* Layer 1: Global Three.js Glass Orb Scene Canvas (Covers Full Hero, Positioned Behind Text) */}
+      <div className="hero-3d-orb-layer absolute inset-0 w-full h-full pointer-events-none z-10 overflow-visible">
+        <HeroGlassOrb />
+      </div>
+
+      {/* Layer 2: Hero UI Content, Text & Interactive Buttons (Positioned ABOVE Orb Layer) */}
+      <div className="relative z-20 max-w-7xl mx-auto w-full my-auto py-6 pointer-events-auto">
+        {/* Top Editorial Eyebrow Tag */}
+        <div className="mb-6">
+          <div className="hero-badge inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[#1F1F1F]/90 backdrop-blur-md border border-[#3A3A3A] text-xs font-mono text-[#D4D4D4] shadow-sm">
+            <span className="w-2 h-2 rounded-full bg-[#6A8DFF]" />
+            <span>CAMPUS RECRUITMENT AUTOMATION ENGINE</span>
+          </div>
         </div>
 
-        {/* Hero Title */}
-        <h1
-          ref={titleRef}
-          className="text-3xl sm:text-5xl md:text-6xl font-heading font-extrabold tracking-tight text-white leading-[1.12] mb-6 max-w-4xl"
-        >
-          {titleWords.map((word, index) => (
-            <span
-              key={index}
-              className={`hero-title-word inline-block mr-3 sm:mr-4 transform-gpu ${
-                index === 2 || index === 3
-                  ? 'bg-gradient-to-r from-emerald-400 via-teal-400 to-emerald-300 bg-clip-text text-transparent'
-                  : ''
-              }`}
+        {/* Clean Editorial Headline */}
+        <div className="max-w-4xl">
+          <h1
+            ref={titleRef}
+            className="text-4xl sm:text-6xl md:text-7xl xl:text-8xl font-heading font-extrabold tracking-tight text-[#FAFAFA] leading-[0.98] mb-6 text-left uppercase"
+          >
+            <span className="hero-title-word block">PLACEMENT</span>
+            <span className="hero-title-word block text-[#D4D4D4]">MANAGEMENT</span>
+            <span className="hero-title-word block text-[#6A8DFF]">PORTAL.</span>
+          </h1>
+
+          <p
+            ref={subtitleRef}
+            className="text-base sm:text-xl text-[#D4D4D4] font-normal leading-relaxed text-balance max-w-2xl mb-8 drop-shadow-sm"
+          >
+            Replacing fragmented spreadsheets and delayed email notices with an automated, high-throughput campus placement workflow engine.
+          </p>
+
+          <div
+            ref={ctaRef}
+            className="flex flex-col sm:flex-row items-stretch sm:items-center justify-start gap-4"
+          >
+            {/* Main CTA Button */}
+            <button
+              onClick={triggerConfetti}
+              onMouseEnter={() => soundEngine.playHover()}
+              className="group inline-flex items-center justify-center gap-3 px-8 py-4 rounded-xl text-sm font-medium text-white bg-[#6A8DFF] hover:bg-[#7D9EFF] transition-all duration-200 shadow-lg"
+              data-cursor-hover
+              data-cursor-text="EXPLORE"
             >
-              {word}
-            </span>
-          ))}
-        </h1>
+              <span>Explore Architecture</span>
+              <ArrowDownRight className="w-4 h-4 text-white group-hover:translate-x-0.5 group-hover:translate-y-0.5 transition-transform" />
+            </button>
 
-        {/* Subtitle */}
-        <p
-          ref={subtitleRef}
-          className="text-base sm:text-xl text-slate-300 max-w-3xl font-light leading-relaxed mb-10 text-balance"
-        >
-          Replacing fragmented spreadsheets, delayed email notices, and manual eligibility checking with an{' '}
-          <strong className="text-white font-medium underline decoration-emerald-500/60 underline-offset-4">
-            automated recruitment engine
-          </strong>
-          .
-        </p>
-
-        {/* CTAs */}
-        <div
-          ref={ctaRef}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full sm:w-auto"
-        >
-          <button
-            onClick={scrollToContent}
-            className="group relative w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl text-sm font-bold tracking-wider uppercase text-white bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 transition-all duration-500 hover:scale-105 active:scale-95 shadow-lg"
-          >
-            <Sparkles className="w-5 h-5 group-hover:rotate-45 transition-transform" />
-            <span>Explore Features</span>
-            <ArrowDownRight className="w-5 h-5 group-hover:translate-x-1 group-hover:translate-y-1 transition-transform" />
-          </button>
-
-          <button
-            onClick={() => onOpenPortalModal()}
-            className="group w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-2xl text-sm font-bold tracking-wider uppercase text-white bg-slate-800/80 border border-emerald-500/30 hover:border-emerald-400 hover:bg-slate-800 transition-all duration-300 backdrop-blur-md hover:scale-105 active:scale-95"
-          >
-            <Play className="w-4 h-4 text-emerald-400 fill-emerald-400 group-hover:scale-125 transition-transform" />
-            <span>Live Interactive Demo</span>
-          </button>
+            {/* Secondary Interactive Portal Trigger Link */}
+            <button
+              onClick={() => {
+                soundEngine.playClick();
+                onOpenPortalModal();
+              }}
+              onMouseEnter={() => soundEngine.playHover()}
+              className="inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl text-sm font-medium text-[#D4D4D4] hover:text-[#FAFAFA] bg-[#1F1F1F]/90 hover:bg-[#282828] backdrop-blur-md border border-[#3A3A3A] transition-all duration-200 shadow-sm"
+              data-cursor-hover
+              data-cursor-text="DEMO"
+            >
+              <Play className="w-3.5 h-3.5 text-[#6A8DFF] fill-[#6A8DFF]" />
+              <span>Simulate Portal</span>
+            </button>
+          </div>
         </div>
+      </div>
 
-        {/* Stats Bar */}
-        <div className="mt-16 w-full max-w-4xl glass-panel rounded-2xl p-4 grid grid-cols-2 md:grid-cols-4 gap-4 border-white/10 text-left">
-          <div className="p-3 rounded-xl bg-white/5 border border-white/5">
-            <p className="text-[11px] text-slate-400 font-mono uppercase">Database Speed</p>
-            <p className="text-lg font-heading font-bold text-emerald-400">{counter1.count}s Query</p>
-          </div>
-          <div className="p-3 rounded-xl bg-white/5 border border-white/5">
-            <p className="text-[11px] text-slate-400 font-mono uppercase">Batch Processing</p>
-            <p className="text-lg font-heading font-bold text-white">{counter2.count.toLocaleString()}+ Records</p>
-          </div>
-          <div className="p-3 rounded-xl bg-white/5 border border-white/5">
-            <p className="text-[11px] text-slate-400 font-mono uppercase">Task Workers</p>
-            <p className="text-lg font-heading font-bold text-teal-400">Celery & Redis</p>
-          </div>
-          <div className="p-3 rounded-xl bg-white/5 border border-white/5">
-            <p className="text-[11px] text-slate-400 font-mono uppercase">Security Audit</p>
-            <p className="text-lg font-heading font-bold text-green-400 flex items-center gap-1">
-              <ShieldCheck className="w-4 h-4" /> 100% Compliant
-            </p>
-          </div>
+      {/* Layer 2: Editorial Bottom Metadata Strip */}
+      <div className="relative z-20 max-w-7xl mx-auto w-full pt-6 border-t border-[#3A3A3A]/60 flex flex-wrap items-center justify-between gap-4 text-xs font-mono text-[#9E9E9E] pointer-events-auto">
+        <div className="flex items-center gap-6">
+          <span>LATENCY: 0.02s</span>
+          <span>RECORDS: 12,000+</span>
+          <span className="hidden sm:inline">QUEUE: CELERY & REDIS</span>
+        </div>
+        <div className="flex items-center gap-2 text-[#D4D4D4]">
+          <ShieldCheck className="w-4 h-4 text-[#6A8DFF]" />
+          <span>ENTERPRISE GRADE AUDITED</span>
         </div>
       </div>
     </section>
