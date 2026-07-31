@@ -193,7 +193,7 @@ export const TECH_STACK: TechItem[] = [
     description: 'Provides clean grids, forms, and tables tailored for dashboards.',
     speed: 'Clean Grid Layout'
   },
-  {
+{
     id: 'tech-templates',
     name: 'Django Templates',
     category: 'UI Rendering',
@@ -202,6 +202,11 @@ export const TECH_STACK: TechItem[] = [
     glowColor: '#092E20',
     description: 'Renders dynamic student lists, eligibility matrices, and admin panels securely.',
     speed: 'Secure Server-Side'
+  },
+  {
+    id: 'tech-spa', // Make sure to give this object a unique ID
+    name: 'React SPA', // Update the name as appropriate for your dashboard
+    category: 'UI Rendering',
     role: 'Ultra-fast SPA user interface with sub-millisecond state re-renders and smooth motion.',
     icon: 'Atom',
     glowColor: '#61DAFB',
